@@ -17,9 +17,9 @@ namespace SkinMerger
             try
             {
                 var srcDir = Path.GetFullPath("素材");
-                var dstDir = Path.GetFullPath("出力");
+                var dstBaseDir = Path.GetFullPath("出力");
                 Directory.CreateDirectory(srcDir);
-                Directory.CreateDirectory(dstDir);
+                Directory.CreateDirectory(dstBaseDir);
 
                 if (args.Length == 0)
                 {
@@ -27,10 +27,14 @@ namespace SkinMerger
                     Console.ReadLine();
                 }
 
-                var clothes = Path.GetFullPath(args[0]);
+                var baseRelativePath = args[0];
+                var dstDir = Path.Combine(dstBaseDir, Path.GetFileNameWithoutExtension(baseRelativePath));
+                Directory.CreateDirectory(dstDir);
+
+                var basePath = Path.GetFullPath(baseRelativePath);
                 var list = Directory.GetFiles(srcDir, "*.png", SearchOption.TopDirectoryOnly);
 
-                var source2 = new Bitmap(clothes);
+                var source2 = new Bitmap(basePath);
 
                 int i = 0;
                 foreach (var path in list)
@@ -62,7 +66,7 @@ namespace SkinMerger
                 Console.WriteLine($"エラー: {e.Message}");
             }
 
-            Console.WriteLine($"完了！ ×キーで終了してOKです");
+            Console.WriteLine($"完了！ ×で終了してOKです");
             Console.ReadLine();
         }
     }
